@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: add-app-deployment
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: add-app
+  template:
+    metadata:
+      labels:
+        app: add-app
+    spec:
+      containers:
+        - name: add-app-container
+          image: docker.io/abhijarvis/mini:latest
+          imagePullPolicy: Always
+          env:
+            - name: NUM1
+              value: "5"
+            - name: NUM2
+              value: "10"
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "250m"
+              memory: "64Mi"
+      restartPolicy: Always
+
