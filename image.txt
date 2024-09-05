@@ -1,0 +1,2 @@
+for image pull 
+docker pull abhijarvis/mini:latest
